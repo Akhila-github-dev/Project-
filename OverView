@@ -1,11 +1,42 @@
 dependencies -
+
 spring web
 spring data jpa
 spring seccurity
 mysql connector
 H2 
-jwt
+jwt(jason web token)
 logger
 lombok
 starter mail
 swagger
+
+flow of an api request in a backend application
+                                                            SERVICE
+client <=> filter -> dispatcher servlet -> controller -> service Impl -> Dao
+
+in service Impl we have Dto, model, builders, loggers ,exceptions , notification(mail notification)
+
+client is our UI (fronted)
+before going to controller (we will do filters like authentication and authorization using Jwt) 
+
+in spring application we need dipatcher servlet
+in spring boot will auto configure the dispatcher servlet(auto confiure)
+
+Controller - we will write APIs
+Service - business Logic  
+DAO- repos data access object (data base operations are done here)
+
+have you writen any filter?
+yes i have done it JWT filter, when we get request from client JWT filter will stop it and check if it is a valid user or not. if it is not a vaild user filter will stop you 
+there error status code
+(200,400,500)- important 
+200 -ok(get)
+201- created(post)
+404- Not found
+405- invalid method call (method not available)
+401- unauthorized ( authorization ) roles 
+403- forbidden (authentication user name password wrong )
+
+
+
