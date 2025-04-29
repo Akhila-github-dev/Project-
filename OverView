@@ -1,0 +1,11 @@
+dependencies -
+spring web
+spring data jpa
+spring seccurity
+mysql connector
+H2 
+jwt
+logger
+lombok
+starter mail
+swagger
