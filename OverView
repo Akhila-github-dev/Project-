@@ -10,6 +10,10 @@ logger
 lombok
 starter mail
 swagger
+dev tools - automatic refresh
+
+development phase we use dev tools 
+production server we don't use dev tools
 
 flow of an api request in a backend application
                                                             SERVICE
@@ -59,6 +63,41 @@ if we get 403 error handle it and clear msg
 
 Notification
 email should be send 
+
+maven build tool - 
+pom.xml -
+if we keep one dependency in pom file , maven build tool will bring required dependencies. It will generate jar file.
+it maven dependencies we find all the jar files.
+In real time
+we will have artificate repository  all the required dependency are present in artificate. we will pull from there
+because maven is open source it has some vulnerability so we dont use it directly.
+
+swagger - we can do testing, documents generation
+default ui for swagger- localhost:8989/swagger-ui/index.html
+it will create the interface (UI) for u without doing nothing
+
+
+H2 is in memory database. application start chesthe untadhi end chesthe end avuthundhi
+
+profile - switch from one stage to another stage
+dev profile -QA profile -prod profile
+application-dev.yml 
+application-prod.yml 
+application.properties
+
+From where we are getting username and passwords In real time project ?
+devops team - over the pipline inject the variable (environment variable)
+sensitive things we shouldn't hardcode 
+In applicaton.properties we will give {$username} {$password} we willget those details from devops team over the pipline when they build sever. when server is building we will automatically get those details.
+
+In main application.properties file
+spring.profile.active=dev    this profile is active 
+we have dev,qa,uat,prod profiles 
+
+@postcontruct - we application is building it will store some dummy values
+consturct avuthunna appudu will store some dummy vaule 
+
+
 
 
 
