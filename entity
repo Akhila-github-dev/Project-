@@ -1,0 +1,75 @@
+
+@Entity
+@Table(name = "patients")
+@Data
+@ToString(exclude = "appointments")
+@NoArgsConstructor
+@AllArgsConstructor
+public class Patient {
+
+    @Id
+    @Column(name = "patient_id")
+    private String patientId;
+
+    @Column(name = "first_name", nullable = false)
+    private String firstName;
+
+    @Column(name = "last_name", nullable = false)
+    private String lastName;
+
+    @Column(name = "email", unique = true)
+    private String email;
+
+   @Column(name = "date_of_birth")
+    private LocalDate dateOfBirth; // Stored in 'YYYY-MM-DD' format.
+
+    @OneToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "address_id")
+	private Address address;
+
+    @OneToMany(mappedBy = "patient", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
+    private List<Appointment> appointments;
+    
+    
+    @PrePersist
+    private void generatePatientId() {
+        if (this.patientId == null) {
+            String yearMonth = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMM"));
+
+            String randomDigits = String.format("%06d", new Random().nextInt(1_000_000));
+
+            this.patientId = yearMonth + randomDigits;
+        }
+    }
+
+	public Patient(String firstName, String lastName, String email, String phoneNumber, String gender,
+			LocalDate dateOfBirth, Address address) {
+		super();
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.email = email;
+		this.phoneNumber = phoneNumber;
+		this.gender = gender;
+		this.dateOfBirth = dateOfBirth;
+		this.address = address;
+	}
+    
+}
+
+
+@Entity - same table present in table
+@Table(name ="namingconvention")
+@Data - generate getters and setters 
+@NoArgsConstructor - default constructor is generated.
+@AllArgsConstructor - generate all argunments constructor
+@ToString (exclude ="appointemts") - to generate to string
+
+if we don't have tostring it will print the hash code 
+
+ @Column(name = "last_name", nullable = false)  ->doesn't allow null vaules
+ 
+ 
+@Column(name = "email", unique = true) -> it should be unique 
+
+ 
