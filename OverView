@@ -32,8 +32,9 @@ Service - business Logic
 DAO- (repos) data access object (data base operations are done here)
 
 have you writen any filter?
-yes i have done it JWT filter, when we get request from client JWT filter will stop it and check if it is a valid user or not. if it is not a vaild user filter will stop you 
-there error status code
+yes i have done it, I Have written JWT filter, when we get request from client JWT filter will stop it and check if it is a valid user or not. if it is not a vaild user filter will stop you 
+there and  401 or 403 error status code
+
 (200,400,500)- important 
 200 -ok(get)
 201- created(post)
@@ -46,7 +47,7 @@ there error status code
 Model package -entity (exact copy of ur table)
 
 DTO- data transfer object( used to communicate client and server) 
-over the internet request is going hackers can hack it. we only expose dtos. dtos are used to expose data to frontend and bring data from fronted.
+over the internet request is going so hackers can hack it. we only expose dtos not entity. dtos are used to expose data to frontend and bring data from fronted.
 some details should not be shown to frontend eg - password, address. dtos will exculde unnecessary details
 
 Builders-
@@ -67,7 +68,7 @@ email should be send
 maven build tool - 
 pom.xml -
 if we keep one dependency in pom file , maven build tool will bring required dependencies. It will generate jar file.
-it maven dependencies we find all the jar files.
+in maven repository we find all the jar files.
 In real time
 we will have artificate repository  all the required dependency are present in artificate. we will pull from there
 because maven is open source it has some vulnerability so we dont use it directly.
@@ -88,13 +89,13 @@ application.properties
 From where we are getting username and passwords In real time project ?
 devops team - over the pipline inject the variable (environment variable)
 sensitive things we shouldn't hardcode 
-In applicaton.properties we will give {$username} {$password} we willget those details from devops team over the pipline when they build sever. when server is building we will automatically get those details.
+In applicaton.properties we will give {$username} {$password} we will get those details from devops team over the pipline when they build sever. when server is building we will automatically get those details.
 
 In main application.properties file
 spring.profile.active=dev    this profile is active 
 we have dev,qa,uat,prod profiles 
 
-@postcontruct - we application is building it will store some dummy values
+@postcontruct - when application is building(or) running, it will store some dummy values
 consturct avuthunna appudu will store some dummy vaule 
 
 
