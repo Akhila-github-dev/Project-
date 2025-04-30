@@ -23,23 +23,23 @@ public class Patient {
    @Column(name = "date_of_birth")
     private LocalDate dateOfBirth; // Stored in 'YYYY-MM-DD' format.
 
-    @OneToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "address_id")
-	private Address address;
+    @OneToOne(cascade = CascadeType.ALL) // one patient oka address untadhi // cascadeType.ALL if we save patient details, automatically address details will be saved 
+	@JoinColumn(name = "address_id")  //to refer one particular Id (foreign key) 
+	private Address address; //has a relationship 
 
-    @OneToMany(mappedBy = "patient", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonIgnore
+    @OneToMany(mappedBy = "patient", cascade = CascadeType.ALL, orphanRemoval = true)  // oka patient ki many appointments untadhi
+    @JsonIgnore // we might get stack over flow error bcz patient will call appointment, appointment will call patient so will get stack overflow so to ignore it we use @jsonIgnore 
     private List<Appointment> appointments;
     
     
-    @PrePersist
+    @PrePersist  
     private void generatePatientId() {
         if (this.patientId == null) {
             String yearMonth = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMM"));
 
             String randomDigits = String.format("%06d", new Random().nextInt(1_000_000));
 
-            this.patientId = yearMonth + randomDigits;
+            this.patientId = yearMonth + randomDigits; //to generate unique patientId
         }
     }
 
@@ -64,12 +64,31 @@ public class Patient {
 @NoArgsConstructor - default constructor is generated.
 @AllArgsConstructor - generate all argunments constructor
 @ToString (exclude ="appointemts") - to generate to string
-
 if we don't have tostring it will print the hash code 
-
- @Column(name = "last_name", nullable = false)  ->doesn't allow null vaules
- 
- 
+@Column(name = "last_name", nullable = false)  ->doesn't allow null vaules 
 @Column(name = "email", unique = true) -> it should be unique 
+@PrePersist  - before saving the patient details particular method will call and update the patient ID
+@Embeddable 
+public class Address {
+private String street;
+}
+@Entity
+public class User {
+    @Id
+    @GeneratedValue
+    private Long id;
+    
+    private String name;
+    
+    @Embedded // in user table we will get address table
+    private Address address;
+  
+}
 
- 
+@Builder- without need of constructor we can build
+
+if we don't put mappedBy it will create two tables 
+ @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    private Staff staff;
+
+
