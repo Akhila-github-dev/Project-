@@ -2,7 +2,7 @@ dependencies -
 
 spring web
 spring data jpa
-spring seccurity
+spring security
 mysql connector
 H2 
 jwt(jason web token)
@@ -60,7 +60,7 @@ track each issues
 each request should be logged 
 
 exception handling
-if we get 403 error handle it and clear msg
+ handle it and clear msg
 
 Notification
 email should be send 
@@ -69,6 +69,7 @@ maven build tool -
 pom.xml -
 if we keep one dependency in pom file , maven build tool will bring required dependencies. It will generate jar file.
 in maven repository we find all the jar files.
+
 In real time
 we will have artificate repository  all the required dependency are present in artificate. we will pull from there
 because maven is open source it has some vulnerability so we dont use it directly.
