@@ -1,0 +1,12 @@
+@RestController
+@RequestMapping("/staff")
+public class StaffController {
+
+    private final StaffService staffService;
+
+    public StaffController(StaffService staffService) {
+        this.staffService = staffService;
+    }
+
+here we have used parameterized constructor (constructor injection) or else we can use @Autowired for field injection
+but in real time we use constuctor injection. this will make sure class is immutable 
