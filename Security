@@ -1,0 +1,5 @@
+Security
+
+JWT - every time we getting request from frontend they will send a JWT. jwt has some data that is given by backend only
+when ever user login for the first time, then we will generate one jwt. this jwt is send to frontend.
+frontend will store the jwt. when ever we get request from user. frontend will send the jwt to backend. in backend we will check vaild user or not using jwt 
