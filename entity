@@ -92,3 +92,23 @@ if we don't put mappedBy it will create two tables
     private Staff staff;
 
 
+
+@Entity
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE) 
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@SuperBuilder  -> doctor related details are present in super class staff, so that y we use superBuilder 
+public class Doctor extends Staff {
+
+    @Column(name = "specialization")
+    private String specialization;  // Doctor's specialization
+
+    // Additional doctor-specific fields can be added here
+}
+
+every doctor is a staff and every staff is a user
+
+
+@OneToMany(mappedBy = "room", cascade = CascadeType.ALL, orphanRemoval = true) -> when we have one to many mapping, in list if we delete one other fileds are not deleted. if we don't have orphanRemoval they won't be deleted. to delete them we put orphanRemoval as true. 
+    private List<Bed> beds; // List of beds in the room  //here jsonignore is also not there for onetoMany, bcz we are not pulling any data for room and beds, that's y we haven't kept jsonIgnore
