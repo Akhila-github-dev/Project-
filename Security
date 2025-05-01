@@ -3,3 +3,122 @@ Security
 JWT - every time we getting request from frontend they will send a JWT. jwt has some data that is given by backend only
 when ever user login for the first time, then we will generate one jwt. this jwt is send to frontend.
 frontend will store the jwt. when ever we get request from user. frontend will send the jwt to backend. in backend we will check vaild user or not using jwt 
+
+JWT 
+3 pieces
+ Header.PayLoad.Signature
+
+jwt is part of 3 pieces. 1 pieces is header, 2 pieces is payload, 3 pieces is signature
+
+this is one jwt token
+eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWUsImlhdCI6MTUxNjIzOTAyMn0.KMUFsIDTnFmyG3nMiGM6H9FNFUROf3wh7SmqJp-QV30
+
+we generate secret key, with our playload it generate one signature.
+
+for every use signature is different. by using signature only we will verify original jwt or not
+@Component
+public class JwtService {
+
+	private String secretKey=generateKey(); // used to generate some encoded secretkey
+
+	private long jwtExpiration=60*120*1000; // jwt should have some expiration. 60 min here
+
+	public String extractUsername(String token) {
+		return extractClaim(token, Claims::getSubject);
+	}
+
+	public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
+		final Claims claims = extractAllClaims(token);
+		return claimsResolver.apply(claims);
+	}
+
+	public String generateToken(String userName) {
+		return generateToken(new HashMap<>(), userName);
+	}
+
+	public String generateToken(Map<String, Object> extraClaims, String userName) {
+		return buildToken(extraClaims, userName, jwtExpiration);
+	}
+
+	public long getExpirationTime() {
+		return jwtExpiration;
+	}
+
+	private String buildToken(Map<String, Object> extraClaims, String userName, long expiration) {
+		return Jwts.builder().setClaims(extraClaims).setSubject(userName)
+				.setIssuedAt(new Date(System.currentTimeMillis()))
+				.setExpiration(new Date(System.currentTimeMillis() + expiration))
+				.signWith(getSignInKey(), SignatureAlgorithm.HS256).compact();
+	}
+
+	public boolean isTokenValid(String token, String username) {
+		final String username2 = extractUsername(token);
+		return (username2.equals(username)) && !isTokenExpired(token);
+	}
+
+	private boolean isTokenExpired(String token) {
+		return extractExpiration(token).before(new Date());
+	}
+
+	private Date extractExpiration(String token) {
+		return extractClaim(token, Claims::getExpiration);
+	}
+
+	private Claims extractAllClaims(String token) {
+		return Jwts.parserBuilder().setSigningKey(getSignInKey()).build().parseClaimsJws(token).getBody();
+	}
+
+	private Key getSignInKey() {
+		byte[] keyBytes = Decoders.BASE64.decode(secretKey);
+		return Keys.hmacShaKeyFor(keyBytes);
+	}
+	
+	private String generateKey() {
+		SecureRandom secureRandom = new SecureRandom();
+		byte[] key = new byte[32];
+		secureRandom.nextBytes(key);
+		String encodeKey = Base64.getEncoder().encodeToString(key);
+		return encodeKey;
+	}
+
+}
+========================================================================
+@Component
+public class JwtAuthenticationFilter extends OncePerRequestFilter{  //OncePerRequestFilter- for every request in backend this filter will invoke  
+	
+	@Autowired
+	private JwtService jwtService;
+	
+	@Autowired
+	SecurityUser securityUser;
+
+	@Override
+	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+			throws ServletException, IOException {
+		
+		String userEmail = null;
+  String jwt = null;
+		
+		String header = request.getHeader("Authorization"); 
+		
+		if(header!=null && header.startsWith("Bearer ")) { //generally we will start with bearer 
+			
+			jwt = header.substring(7); // after bearer and space (7 places) after 7 we are extracting jwt
+			userEmail = jwtService.extractUsername(jwt); // extracting user email 
+		}
+		
+		try {
+			
+			Authentication authentication = SecurityContextHolder.getContext().getAuthentication(); // in security context holder only authentication will happen 
+			//if the use is already authenticated then we will have authentication details
+
+			if(userEmail!=null && authentication == null) {
+				UserDetails userDetails = securityUser.loadUserByUsername(userEmail);
+				 if (jwtService.isTokenValid(jwt, userDetails.getUsername())) {
+	                    UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
+	                            userDetails,
+	                            null,
+	                            userDetails.getAuthorities()
+	                    );
+	                    
+
