@@ -58,7 +58,7 @@ public class Patient {
 }
 
 
-@Entity - same table present in table
+@Entity - same table present in db
 @Table(name ="namingconvention")
 @Data - generate getters and setters 
 @NoArgsConstructor - default constructor is generated.
