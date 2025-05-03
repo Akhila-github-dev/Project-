@@ -32,7 +32,7 @@ public class Patient {
     private List<Appointment> appointments;
     
     
-    @PrePersist  
+    @PrePersist  // before saving the patient details( table details) this method will call generate unique patient id and save those details. 
     private void generatePatientId() {
         if (this.patientId == null) {
             String yearMonth = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMM"));
@@ -42,18 +42,6 @@ public class Patient {
             this.patientId = yearMonth + randomDigits; //to generate unique patientId
         }
     }
-
-	public Patient(String firstName, String lastName, String email, String phoneNumber, String gender,
-			LocalDate dateOfBirth, Address address) {
-		super();
-		this.firstName = firstName;
-		this.lastName = lastName;
-		this.email = email;
-		this.phoneNumber = phoneNumber;
-		this.gender = gender;
-		this.dateOfBirth = dateOfBirth;
-		this.address = address;
-	}
     
 }
 
@@ -85,7 +73,7 @@ public class User {
   
 }
 
-@Builder- without need of constructor we can build
+@Builder- without need of constructor we can build. in builder design pattern it is useful 
 
 if we don't put mappedBy it will create two tables 
  @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
