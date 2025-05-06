@@ -5,7 +5,7 @@ spring data jpa
 spring security
 mysql connector
 H2 
-jwt(jason web token)
+jwt(json web token)
 logger
 lombok
 starter mail
