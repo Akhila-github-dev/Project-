@@ -48,7 +48,7 @@ Model package -entity (exact copy of ur table)
 
 DTO- data transfer object( used to communicate client and server) 
 over the internet request is going so hackers can hack it. we only expose dtos not entity. dtos are used to expose data to frontend and bring data from fronted.
-some details should not be shown to frontend eg - password, address. dtos will exculde unnecessary details
+some details should not be shown to frontend eg - password, bank balance. dtos will exculde unnecessary details
 
 Builders-
 builder class
