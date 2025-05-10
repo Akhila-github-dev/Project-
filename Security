@@ -128,5 +128,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter{  //OncePerReq
 	                            null,
 	                            userDetails.getAuthorities()
 	                    );
-	                    
-
+	                   authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request)); 
+ 			SecurityContextHolder.getContext().setAuthentication(authToken);
+	 }
+			}
+			filterChain.doFilter(request, response);// this will forward to next filter
+		}catch(Exception e){
+syso(e);
+}
