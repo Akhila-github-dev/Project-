@@ -136,3 +136,58 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter{  //OncePerReq
 		}catch(Exception e){
 syso(e);
 }
+
+============================================
+@Configuration
+public class SecurityConfig {
+	
+	@Autowired
+	SecurityUser securityUser;
+	
+	@Autowired
+	JwtAuthenticationFilter jwtFilter;
+	
+    @Bean
+	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+		
+		http
+		.csrf(csrf -> csrf.disable()) //   
+		.cors(cors -> cors.disable()) //frontend and backed doesn't run on same port, we can't send request on same port bccz of cors presently we have disabled them
+						// if we want to enable we have to give fronted port num there
+		.authorizeHttpRequests(request -> request.requestMatchers("/auth/**").permitAll())   //any endpoint after auth can access by anyone bcz we have given permitALl i.e, security is remove for this layer.  
+		.authorizeHttpRequests(request -> request.requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll())  //swagger can access by anybody
+        .authorizeHttpRequests(request -> request.requestMatchers("/h2-console/**").permitAll()) // h2 can access anybody
+        .authorizeHttpRequests(request -> request.requestMatchers("/rooms/**").hasAnyRole("SUPERADMIN","ADMIN")) // admin and superadmin can access the room 
+        .authorizeHttpRequests(request -> request.requestMatchers("/staff/**").hasAnyRole("SUPERADMIN","ADMIN")) // staff is also managed by admin and superadmin
+        .authorizeHttpRequests(request -> request.requestMatchers("/doctor-schedule/**").hasAnyRole("SUPERADMIN","ADMIN","DOCTOR")) // doctor can also access his appointment 
+		.authorizeHttpRequests(request -> request.anyRequest().authenticated())  // authenticated user can access any request 
+		.sessionManagement((session) -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+		.authenticationProvider(authenticationProvider())
+		.headers(headers -> headers.frameOptions(frameOptions -> frameOptions.disable()))
+		.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class); // here we have added our custome jwtFilter before usernamepasswordAuthenicationfilter 
+		
+		return http.build();
+	}
+    
+	
+	@Bean
+	public PasswordEncoder passwordEncoder() {
+		return new BCryptPasswordEncoder(); 
+	}
+	
+	@Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
+        return config.getAuthenticationManager();
+    }
+	
+	@Bean
+    public AuthenticationProvider authenticationProvider() {
+        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
+
+        authProvider.setUserDetailsService(securityUser);
+        authProvider.setPasswordEncoder(passwordEncoder());
+
+        return authProvider;
+    }
+
+}
