@@ -15,7 +15,7 @@ eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4
 
 we generate secret key, with our payload it generate one signature.
 
-for every use signature is different. by using signature only we will verify original jwt or not
+for every user signature is different. by using signature only we will verify original jwt or not
 
 secret key + random payload = signature
 
